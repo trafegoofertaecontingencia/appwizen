@@ -5,19 +5,29 @@ import Transaction from "@/models/Transaction";
 export async function POST(req: Request) {
   await connectDB();
 
-  const { userId, tipo, categoria, valor, data } = await req.json();
+  const body = await req.json();
+  const { userId, tipo, categoria, valor, data } = body;
+
+  console.log(body)
 
   if (!userId || !tipo || !categoria || !valor || !data) {
-    return NextResponse.json({ error: "Campos obrigatórios faltando" }, { status: 400 });
+    return NextResponse.json({ error: "Campos obrigatórios ausentes" }, { status: 400 });
   }
 
-  const novaTransacao = await Transaction.create({
-    userId,
-    tipo,
-    categoria,
-    valor,
-    data,
-  });
+  try {
+    const transaction = new Transaction({
+      userId,
+      tipo,
+      categoria,
+      valor: Number(valor),
+      data: new Date(data),
+    });
 
-  return NextResponse.json({ transaction: novaTransacao });
+    await transaction.save();
+
+    return NextResponse.json({ success: true, transaction });
+  } catch (error) {
+    console.error("Erro ao salvar transação:", error);
+    return NextResponse.json({ error: "Erro ao salvar transação" }, { status: 500 });
+  }
 }

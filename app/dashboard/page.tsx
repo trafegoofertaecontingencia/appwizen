@@ -1,108 +1,66 @@
 "use client";
 
-import { useState } from "react";
-import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts";
-
-interface Transaction {
-  type: "Receita" | "Despesa";
-  category: string;
-  value: number;
-  date: string;
-}
+import { useEffect, useState } from "react";
+import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
 export default function Dashboard() {
-  const [transactions] = useState<Transaction[]>([
-    { type: "Receita", category: "Salário", value: 5000, date: "2025-05-01" },
-    { type: "Despesa", category: "Mercado", value: 1200, date: "2025-05-02" },
-    { type: "Despesa", category: "Transporte", value: 300, date: "2025-05-03" },
-    { type: "Receita", category: "Freela", value: 1500, date: "2025-05-04" },
-  ]);
+  const [receitaTotal, setReceitaTotal] = useState(0);
+  const [despesaTotal, setDespesaTotal] = useState(0);
+  const [saldoFinal, setSaldoFinal] = useState(0);
+  const [chartData, setChartData] = useState([]);
 
-  const totalReceita = transactions.filter(t => t.type === "Receita").reduce((acc, t) => acc + t.value, 0);
-  const totalDespesa = transactions.filter(t => t.type === "Despesa").reduce((acc, t) => acc + t.value, 0);
-  const saldo = totalReceita - totalDespesa;
+  useEffect(() => {
+    fetch("/api/dashboard?userId=6835cd92635cddf8b201fec1")
+      .then((res) => res.json())
+      .then((data) => {
+        setReceitaTotal(data.receitaTotal || 0);
+        setDespesaTotal(data.despesaTotal || 0);
+        setSaldoFinal(data.saldoFinal || 0);
+      });
 
-  const pieData = [
-    { name: "Receita", value: totalReceita },
-    { name: "Despesa", value: totalDespesa },
-    { name: "Saldo", value: saldo },
-  ];
+    fetch("/api/dashboard/chart?userId=6835cd92635cddf8b201fec1")
+      .then((res) => res.json())
+      .then((data) => setChartData(data));
+  }, []);
 
-  const PIE_COLORS = ["#34D399", "#F87171", "#60A5FA"]; // verde, vermelho, azul
-  const BAR_COLOR = "#7C3AED";
+  
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4 md:p-10">
-      {/* Resumo */}
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-6">
-        <div className="bg-white p-4 md:p-6 rounded-lg shadow border">
-          <p className="text-gray-500 text-sm">Receita</p>
-          <p className="text-2xl font-medium text-gray-700">R$ {totalReceita}</p>
+    <div className="p-6 space-y-6">
+      <h1 className="text-3xl font-bold">Dashboard Financeiro</h1>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="rounded-xl border bg-white shadow p-4">
+          <p className="text-gray-500">Receita total</p>
+          <p className="text-2xl font-bold">R$ {receitaTotal.toLocaleString()}</p>
         </div>
-        <div className="bg-white p-4 md:p-6 rounded-lg shadow border">
-          <p className="text-gray-500 text-sm">Despesa</p>
-          <p className="text-2xl font-medium text-gray-700">R$ {totalDespesa}</p>
+        <div className="rounded-xl border bg-white shadow p-4">
+          <p className="text-gray-500">Despesa total</p>
+          <p className="text-2xl font-bold">R$ {despesaTotal.toLocaleString()}</p>
         </div>
-        <div className="bg-white p-4 md:p-6 rounded-lg shadow border">
-          <p className="text-gray-500 text-sm">Saldo</p>
-          <p className="text-2xl font-medium text-gray-700">R$ {saldo}</p>
+        <div className="rounded-xl border bg-white shadow p-4">
+          <p className="text-gray-500">Saldo final</p>
+          <p className="text-2xl font-bold">R$ {saldoFinal.toLocaleString()}</p>
         </div>
       </div>
 
-      {/* Gráficos */}
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-        {/* Pie Chart */}
-        <div className="bg-white p-4 md:p-6 rounded-lg shadow border">
-          <h2 className="text-lg font-medium text-gray-700 mb-4">Resumo Financeiro</h2>
-          <div className="w-full h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={pieData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={50}
-                  outerRadius={80}
-                  dataKey="value"
-                >
-                  {pieData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
-                  ))}
-                </Pie>
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-
-          {/* Legenda customizada */}
-          <div className="mt-4 space-y-2">
-            {pieData.map((entry, index) => (
-              <div key={entry.name} className="flex items-center space-x-2">
-                <span
-                  className="inline-block w-3 h-3 rounded-full"
-                  style={{ backgroundColor: PIE_COLORS[index % PIE_COLORS.length] }}
-                />
-                <span className="text-gray-600 text-sm">{entry.name}:</span>
-                <span className="text-gray-800 font-medium">R$ {entry.value}</span>
-              </div>
-            ))}
-          </div>
+      {chartData.length > 0 && (
+        <div className="rounded-xl border bg-white shadow p-4">
+          <h2 className="text-xl font-semibold mb-4">Fluxo Financeiro Mensal</h2>
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={chartData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="month" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Line type="monotone" dataKey="receita" stroke="#4ade80" strokeWidth={3} />
+              <Line type="monotone" dataKey="despesa" stroke="#f87171" strokeWidth={3} />
+              <Line type="monotone" dataKey="saldo" stroke="#60a5fa" strokeWidth={3} />
+            </LineChart>
+          </ResponsiveContainer>
         </div>
-
-        {/* Bar Chart */}
-        <div className="bg-white p-4 md:p-6 rounded-lg shadow border">
-          <h2 className="text-lg font-medium text-gray-700 mb-4">Comparativo</h2>
-          <div className="w-full h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={pieData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Bar dataKey="value" fill={BAR_COLOR} radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-      </div>
+      )}
     </div>
   );
 }
