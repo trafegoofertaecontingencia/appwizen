@@ -66,7 +66,7 @@ export default function Form() {
 
       <div>
         <label className="block mb-1 font-medium">Categoria</label>
-        {formData.tipo === "receita" ? (
+        {formData.tipo === "despesa" ? (
           <select
             name="categoria"
             value={formData.categoria}
