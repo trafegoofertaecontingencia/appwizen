@@ -7,20 +7,37 @@ export default function Dashboard() {
   const [receitaTotal, setReceitaTotal] = useState(0);
   const [despesaTotal, setDespesaTotal] = useState(0);
   const [saldoFinal, setSaldoFinal] = useState(0);
-  const [chartData, setChartData] = useState([]);
+  const [categorias, setCategorias] = useState({
+    delivery: 0,
+    transporte: 0,
+    moradia: 0,
+    lazer: 0,
+    investimentos: 0,
+    educacao: 0,
+  });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/dashboard?userId=6835cd92635cddf8b201fec1")
-      .then((res) => res.json())
-      .then((data) => {
-        setReceitaTotal(data.receitaTotal || 0);
-        setDespesaTotal(data.despesaTotal || 0);
-        setSaldoFinal(data.saldoFinal || 0);
-      });
+    const fetchData = async () => {
+      try {
+        const res1 = await fetch("/api/dashboard?userId=6835cd92635cddf8b201fec1");
+        const data1 = await res1.json();
 
-    fetch("/api/dashboard/chart?userId=6835cd92635cddf8b201fec1")
-      .then((res) => res.json())
-      .then((data) => setChartData(data));
+        setReceitaTotal(data1.receitaTotal || 0);
+        setDespesaTotal(data1.despesaTotal || 0);
+        setSaldoFinal(data1.saldoFinal || 0);
+
+        const res2 = await fetch("/api/dashboard/chart?userId=6835cd92635cddf8b201fec1");
+        const data2 = await res2.json();
+        setCategorias(data2 || {});
+      } catch (err) {
+        console.error("Erro ao buscar dados:", err);
+      } finally {
+        setLoading(false); // ✅ Agora o loading é encerrado corretamente
+      }
+    };
+
+    fetchData();
   }, []);
 
   return (
@@ -28,14 +45,8 @@ export default function Dashboard() {
       receitaTotal={receitaTotal}
       despesaTotal={despesaTotal}
       saldoFinal={saldoFinal}
-      categorias={{
-        delivery: 800,
-        transporte: 1200,
-        moradia: 1800,
-        lazer: 600,
-        investimentos: 900,
-        educacao: 700,
-      }}
+      categorias={categorias}
+      loading={loading} // ✅ Passamos o loading por prop
     />
   );
 }

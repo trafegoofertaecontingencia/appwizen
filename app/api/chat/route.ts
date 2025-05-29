@@ -17,7 +17,7 @@ export async function POST(req: Request) {
 const transacoes = await Transaction.find({ userId })
   .sort({ createdAt: -1 })
   .limit(10);
-  const historico = await Message.find({ userId }).sort({ createdAt: 1 }).limit(6);
+  const historico = await Message.find({ userId }).sort({ createdAt: 1 });
 
 
 const contextoFinanceiro = transacoes.map(t => {
