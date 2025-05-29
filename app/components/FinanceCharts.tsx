@@ -123,7 +123,11 @@ export default function FinanceCharts({
             const dataset = chart.data.datasets[0];
             return chart.data.labels!.map((label, i) => ({
               text: `${label}: R$ ${dataset.data[i]}`,
-              fillStyle: dataset.backgroundColor?.[i] as string,
+              fillStyle: Array.isArray(dataset.backgroundColor)
+                ? dataset.backgroundColor[i]
+                : typeof dataset.backgroundColor === "string"
+                ? dataset.backgroundColor
+                : "#ccc", // fallback caso seja undefined,
               strokeStyle: "#fff",
               lineWidth: 1,
               hidden: false,
