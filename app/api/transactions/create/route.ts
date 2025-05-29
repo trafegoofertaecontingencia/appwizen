@@ -8,8 +8,6 @@ export async function POST(req: Request) {
   const body = await req.json();
   const { userId, tipo, categoria, valor, data } = body;
 
-  console.log(body)
-
   if (!userId || !tipo || !categoria || !valor || !data) {
     return NextResponse.json({ error: "Campos obrigatórios ausentes" }, { status: 400 });
   }

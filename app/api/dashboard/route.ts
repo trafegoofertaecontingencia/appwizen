@@ -20,8 +20,6 @@ export async function GET(req: Request) {
       .filter((t) => t.tipo === "receita")
       .reduce((acc, t) => acc + t.valor, 0);
 
-      console.log("transações", transacoes);
-
     const despesaTotal = transacoes
       .filter((t) => t.tipo === "gasto")
       .reduce((acc, t) => acc + t.valor, 0);

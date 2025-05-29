@@ -3,10 +3,12 @@
 import { useState } from "react";
 
 export default function Form() {
+
+  
   const [formData, setFormData] = useState({
     userId: "6835cd92635cddf8b201fec1", // Defina o userId real aqui
     tipo: "receita",
-    categoria: "mercado",
+    categoria: "",
     valor: "",
     data: "",
   });
@@ -83,6 +85,8 @@ export default function Form() {
         ) : (
           <input
             className="border w-[100%] p-2 rounded"
+            value={formData.categoria}
+            onChange={handleChange}
             name="categoria"
             type="text"
             placeholder="Digite o tipo de despesa"
