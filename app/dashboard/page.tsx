@@ -20,14 +20,18 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res1 = await fetch("/api/dashboard?userId=6835cd92635cddf8b201fec1");
+        const res1 = await fetch(
+          "/api/dashboard?userId=6835cd92635cddf8b201fec1"
+        );
         const data1 = await res1.json();
 
         setReceitaTotal(data1.receitaTotal || 0);
         setDespesaTotal(data1.despesaTotal || 0);
         setSaldoFinal(data1.saldoFinal || 0);
 
-        const res2 = await fetch("/api/dashboard/chart?userId=6835cd92635cddf8b201fec1");
+        const res2 = await fetch(
+          "/api/dashboard/categorias?userId=6835cd92635cddf8b201fec1"
+        );
         const data2 = await res2.json();
         setCategorias(data2 || {});
       } catch (err) {
@@ -37,8 +41,10 @@ export default function Dashboard() {
       }
     };
 
+
     fetchData();
   }, []);
+
 
   return (
     <FinanceCharts

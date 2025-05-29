@@ -53,6 +53,8 @@ export default function FinanceCharts({
     );
   }
 
+const categoriaValores = Object.values(categorias);
+  
   const pieData = {
     labels: ["Receita", "Despesa", "Saldo"],
     datasets: [
@@ -79,12 +81,12 @@ export default function FinanceCharts({
       {
         label: "Gastos por Categoria",
         data: [
-          categorias.delivery,
-          categorias.transporte,
-          categorias.moradia,
-          categorias.lazer,
-          categorias.investimentos,
-          categorias.educacao,
+          categoriaValores[0].delivery,
+          categoriaValores[0].transporte,
+          categoriaValores[0].moradia,
+          categoriaValores[0].lazer,
+          categoriaValores[0].investimentos,
+          categoriaValores[0].educacao,
         ],
         backgroundColor: "#60a5fa",
         borderRadius: 8,
@@ -143,6 +145,8 @@ export default function FinanceCharts({
       },
     },
   };
+
+  console.log(categorias.lazer)
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
