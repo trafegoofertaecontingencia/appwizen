@@ -53,8 +53,6 @@ export default function FinanceCharts({
     );
   }
 
-const categoriaValores = Object.values(categorias);
-  
   const pieData = {
     labels: ["Receita", "Despesa", "Saldo"],
     datasets: [
@@ -68,26 +66,14 @@ const categoriaValores = Object.values(categorias);
     ],
   };
 
+  console.log(Object.values(categorias)[0]);
+
   const barData = {
-    labels: [
-      "Delivery",
-      "Transporte",
-      "Moradia",
-      "Lazer",
-      "Investimentos",
-      "Educação",
-    ],
+    labels: Object.keys(categorias),
     datasets: [
       {
         label: "Gastos por Categoria",
-        data: [
-          categoriaValores[0].delivery,
-          categoriaValores[0].transporte,
-          categoriaValores[0].moradia,
-          categoriaValores[0].lazer,
-          categoriaValores[0].investimentos,
-          categoriaValores[0].educacao,
-        ],
+        data: Object.values(categorias)[0],
         backgroundColor: "#60a5fa",
         borderRadius: 8,
       },
@@ -126,10 +112,10 @@ const categoriaValores = Object.values(categorias);
             return chart.data.labels!.map((label, i) => ({
               text: `${label}: R$ ${dataset.data[i]}`,
               fillStyle: Array.isArray(dataset.backgroundColor)
-                ? dataset.backgroundColor[i]
+                ? (dataset.backgroundColor as string[])[i]
                 : typeof dataset.backgroundColor === "string"
                 ? dataset.backgroundColor
-                : "#ccc", // fallback caso seja undefined,
+                : "#ccc",
               strokeStyle: "#fff",
               lineWidth: 1,
               hidden: false,
@@ -145,8 +131,6 @@ const categoriaValores = Object.values(categorias);
       },
     },
   };
-
-  console.log(categorias.lazer)
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
