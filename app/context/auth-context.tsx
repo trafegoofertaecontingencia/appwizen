@@ -31,6 +31,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       try {
         const decoded = jwt.decode(token) as User;
         setUser(decoded);
+
       } catch {
         localStorage.removeItem("token");
       }

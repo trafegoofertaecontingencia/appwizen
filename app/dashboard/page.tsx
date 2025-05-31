@@ -4,10 +4,17 @@ import { useEffect, useState } from "react";
 import FinanceCharts from "../components/FinanceCharts";
 import { useAuth } from "../context/auth-context";
 
+import { useSession } from "next-auth/react";
+
 export default function Dashboard() {
+
+  const [loading, setLoading] = useState(true);
+  const [dataInicio, setDataInicio] = useState("");
+  const [dataFim, setDataFim] = useState("");
+
   const { user } = useAuth();
 
-  if (!user) return <p>Você precisa estar logado</p>;
+  const { data: session, status } = useSession();
 
   const [receitaTotal, setReceitaTotal] = useState(0);
   const [despesaTotal, setDespesaTotal] = useState(0);
@@ -20,16 +27,14 @@ export default function Dashboard() {
     investimentos: 0,
     educacao: 0,
   });
-  const [loading, setLoading] = useState(true);
 
-  const [dataInicio, setDataInicio] = useState("");
-  const [dataFim, setDataFim] = useState("");
+    if (!user && !session) return <p>Você precisa estar logado</p>;
 
   const buscarDados = async () => {
     setLoading(true);
     try {
       const query = new URLSearchParams({
-        userId: user.userId,
+        userId: user?.userId,
         ...(dataInicio && { dataInicio }),
         ...(dataFim && { dataFim }),
       }).toString();
