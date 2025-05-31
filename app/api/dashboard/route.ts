@@ -7,13 +7,32 @@ export async function GET(req: Request) {
 
   const { searchParams } = new URL(req.url);
   const userId = searchParams.get("userId");
+  const dataInicio = searchParams.get("dataInicio");
+  const dataFim = searchParams.get("dataFim");
 
   if (!userId) {
     return NextResponse.json({ error: "Usuário não informado" }, { status: 400 });
   }
 
   try {
-    const transacoes = await Transaction.find({ userId: userId });
+    const filtro: any = { userId };
+
+    if (dataInicio || dataFim) {
+      filtro.data = {};
+
+      if (dataInicio) {
+        filtro.data.$gte = new Date(dataInicio);
+      }
+
+      if (dataFim) {
+        // inclui o final do dia para não perder dados do último dia selecionado
+        const fim = new Date(dataFim);
+        fim.setHours(23, 59, 59, 999);
+        filtro.data.$lte = fim;
+      }
+    }
+
+    const transacoes = await Transaction.find(filtro);
 
     const receitaTotal = transacoes
       .filter((t) => t.tipo === "receita")
@@ -31,8 +50,7 @@ export async function GET(req: Request) {
       }
     });
 
-    // const saldoFinal = receitaTotal - despesaTotal;
-        const saldoFinal = receitaTotal - despesaTotal;
+    const saldoFinal = receitaTotal - despesaTotal;
 
     return NextResponse.json({ receitaTotal, despesaTotal, saldoFinal, categorias });
   } catch (error) {

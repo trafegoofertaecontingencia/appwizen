@@ -68,8 +68,10 @@ export default function FinanceCharts({
     ],
   };
 
+  console.log(Object.keys(categorias));
+
   const barData = {
-    labels: Object.keys(categorias),
+    labels: ["Mercado", "Delivery", "Lazer", "outros"],
     datasets: [
       {
         label: "Gastos por Categoria",
