@@ -5,8 +5,12 @@ import Transaction from "@/models/Transaction";
 export async function POST(req: Request) {
   await connectDB();
 
+  const { searchParams } = new URL(req.url);
+
+  const userId = searchParams.get("userId")
+
   const body = await req.json();
-  const { userId, tipo, categoria, valor, data } = body;
+  const { tipo, categoria, valor, data } = body;
 
   if (!userId || !tipo || !categoria || !valor || !data) {
     return NextResponse.json({ error: "Campos obrigatórios ausentes" }, { status: 400 });

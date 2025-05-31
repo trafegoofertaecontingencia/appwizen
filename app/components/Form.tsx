@@ -7,9 +7,7 @@ export default function Form() {
 
   const { user } = useAuth();
 
-  
   const [formData, setFormData] = useState({
-    userId: user?.userId, // Defina o userId real aqui
     tipo: "receita",
     categoria: "",
     valor: "",
@@ -29,7 +27,7 @@ export default function Form() {
     setStatus("salvando...");
 
     try {
-      const res = await fetch("/api/transactions/create", {
+      const res = await fetch(`/api/transactions/create?userId=${user?.userId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -38,7 +36,7 @@ export default function Form() {
       const data = await res.json();
 
       if (res.ok) {
-        setStatus("✅ Transação salva com sucesso!");
+        setStatus("Transação salva com sucesso!");
         setFormData({ ...formData, valor: "", data: "" });
       } else {
         setStatus(`Erro: ${data.error}`);
@@ -48,6 +46,7 @@ export default function Form() {
       setStatus("Erro ao conectar com o servidor");
     }
   };
+
 
   return (
     <form
