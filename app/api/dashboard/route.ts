@@ -23,12 +23,18 @@ export async function GET(req: Request) {
       .filter((t) => t.tipo === "gasto")
       .reduce((acc, t) => acc + t.valor, 0);
 
+    const categorias: Record<string, number> = {};
+
+    transacoes.forEach((t) => {
+      if (t.tipo === "gasto") {
+        categorias[t.categoria] = (categorias[t.categoria] || 0) + t.valor;
+      }
+    });
+
     // const saldoFinal = receitaTotal - despesaTotal;
         const saldoFinal = receitaTotal - despesaTotal;
 
-    console.log(despesaTotal)
-
-    return NextResponse.json({ receitaTotal, despesaTotal, saldoFinal });
+    return NextResponse.json({ receitaTotal, despesaTotal, saldoFinal, categorias });
   } catch (error) {
     console.error("Erro ao calcular totais:", error);
     return NextResponse.json({ error: "Erro interno" }, { status: 500 });

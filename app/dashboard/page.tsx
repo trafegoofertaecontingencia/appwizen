@@ -3,7 +3,14 @@
 import { useEffect, useState } from "react";
 import FinanceCharts from "../components/FinanceCharts";
 
+import { useAuth } from "../context/auth-context";
+
 export default function Dashboard() {
+  
+  const { user } = useAuth();
+
+  if (!user) return <p>Você precisa estar logado</p>;
+
   const [receitaTotal, setReceitaTotal] = useState(0);
   const [despesaTotal, setDespesaTotal] = useState(0);
   const [saldoFinal, setSaldoFinal] = useState(0);
@@ -20,20 +27,16 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res1 = await fetch(
-          "/api/dashboard?userId=6835cd92635cddf8b201fec1"
+        const res = await fetch(
+          `/api/dashboard?userId=${user.userId}`
         );
-        const data1 = await res1.json();
+        const data = await res.json();
 
-        setReceitaTotal(data1.receitaTotal || 0);
-        setDespesaTotal(data1.despesaTotal || 0);
-        setSaldoFinal(data1.saldoFinal || 0);
+        setReceitaTotal(data.receitaTotal || 0);
+        setDespesaTotal(data.despesaTotal || 0);
+        setSaldoFinal(data.saldoFinal || 0);
+        setCategorias(data.categorias || null);
 
-        const res2 = await fetch(
-          "/api/dashboard/categorias?userId=6835cd92635cddf8b201fec1"
-        );
-        const data2 = await res2.json();
-        setCategorias(data2 || {});
       } catch (err) {
         console.error("Erro ao buscar dados:", err);
       } finally {
@@ -41,10 +44,10 @@ export default function Dashboard() {
       }
     };
 
-
     fetchData();
   }, []);
 
+  console.log(categorias)
 
   return (
     <FinanceCharts

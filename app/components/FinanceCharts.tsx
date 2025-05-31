@@ -45,6 +45,8 @@ export default function FinanceCharts({
   categorias,
   loading,
 }: Props) {
+
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-96">
@@ -66,14 +68,12 @@ export default function FinanceCharts({
     ],
   };
 
-  console.log(Object.values(categorias)[0]);
-
   const barData = {
     labels: Object.keys(categorias),
     datasets: [
       {
         label: "Gastos por Categoria",
-        data: Object.values(categorias)[0],
+        data: Object.values(categorias),
         backgroundColor: "#60a5fa",
         borderRadius: 8,
       },

@@ -1,12 +1,15 @@
 "use client";
 
 import { useState } from "react";
+import { useAuth } from "../context/auth-context";
 
 export default function Form() {
 
+  const { user } = useAuth();
+
   
   const [formData, setFormData] = useState({
-    userId: "6835cd92635cddf8b201fec1", // Defina o userId real aqui
+    userId: user?.userId, // Defina o userId real aqui
     tipo: "receita",
     categoria: "",
     valor: "",
