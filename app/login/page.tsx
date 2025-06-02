@@ -77,7 +77,7 @@ export default function Login() {
       </form>
 
       <button
-        onClick={() => signIn("google", {callbackUrl: "/dashboard"})}
+        onClick={() => signIn("google", {callbackUrl: "/"})}
         className="w-full bg-white border border-gray-300 py-2 rounded flex items-center justify-center gap-2 hover:shadow-md transition"
       >
         <FcGoogle size={24} />

@@ -7,7 +7,7 @@ interface User {
   id: string;
   nome: string;
   email: string;
-  [key: string]: any; // qualquer outro campo
+  [key: string]: any; 
 }
 
 interface AuthContextProps {
@@ -31,7 +31,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       try {
         const decoded = jwt.decode(token) as User;
         setUser(decoded);
-
       } catch {
         localStorage.removeItem("token");
       }
@@ -40,10 +39,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setLoading(false);
   }, []);
 
+
+
   return (
-    <AuthContext.Provider value={{ user, loading }}>
-      {children}
-    </AuthContext.Provider>
+      <AuthContext.Provider value={{ user, loading }}>
+        {children}
+      </AuthContext.Provider>
   );
 };
 

@@ -23,9 +23,8 @@ export default function RootLayout({
       >
         <AuthProvider>
           <SessionProvider>
-          <Header />
-          {children}
-          <Chat />
+            {children}
+            <Chat />
           <Navbar />
           </SessionProvider>
         </AuthProvider>

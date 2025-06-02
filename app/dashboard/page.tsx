@@ -5,16 +5,16 @@ import FinanceCharts from "../components/FinanceCharts";
 import { useAuth } from "../context/auth-context";
 
 import { useSession } from "next-auth/react";
+import Wellcome from "../components/Wellcome";
 
 export default function Dashboard() {
+  const { user } = useAuth();
+
+  const { data: session, status } = useSession();
 
   const [loading, setLoading] = useState(true);
   const [dataInicio, setDataInicio] = useState("");
   const [dataFim, setDataFim] = useState("");
-
-  const { user } = useAuth();
-
-  const { data: session, status } = useSession();
 
   const [receitaTotal, setReceitaTotal] = useState(0);
   const [despesaTotal, setDespesaTotal] = useState(0);
@@ -28,7 +28,7 @@ export default function Dashboard() {
     educacao: 0,
   });
 
-    if (!user && !session) return <p>Você precisa estar logado</p>;
+  console.log(user);
 
   const buscarDados = async () => {
     setLoading(true);
@@ -56,6 +56,8 @@ export default function Dashboard() {
   useEffect(() => {
     buscarDados();
   }, []);
+
+  if (!user && !session) return <Wellcome />;
 
   return (
     <div className="p-4">

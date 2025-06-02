@@ -5,6 +5,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FiMessageSquare } from "react-icons/fi";
 import { IoClose } from "react-icons/io5";
 
+import { useAuth } from "../context/auth-context";
+
+import { useSession } from "next-auth/react";
+
 type Message = {
   role: "user" | "assistant";
   content: string;
@@ -53,6 +57,10 @@ export default function Chat() {
     }
   };
 
+  const { user } = useAuth();
+
+  const { data: session, status } = useSession();
+
   return (
     <div>
       <AnimatePresence>
@@ -90,14 +98,14 @@ export default function Chat() {
               className="w-full p-2 border rounded mb-2"
               rows={2}
               placeholder="Digite sua dúvida financeira..."
-              value={prompt}
+              value={(!session && !user) ? "Você precisa estar logado..." : prompt}
               onChange={(e) => setPrompt(e.target.value)}
             />
 
             <button
               onClick={enviarMensagem}
-              disabled={loading}
-              className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
+              disabled={loading || (!session && !user)}
+              className={`w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700`}
             >
               {loading ? "Consultando..." : "Enviar"}
             </button>
