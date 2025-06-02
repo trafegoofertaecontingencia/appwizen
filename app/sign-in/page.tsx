@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
 import { FcGoogle } from "react-icons/fc";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 type FormData = {
   nome: string;
@@ -22,6 +23,7 @@ export default function Register() {
   } = useForm<FormData>();
 
   const [mensagem, setMensagem] = useState("");
+  const router = useRouter();
 
   const onSubmit = async (data: FormData) => {
     if (data.senha !== data.confirmarSenha) {
@@ -42,7 +44,10 @@ export default function Register() {
     const resultado = await res.json();
     setMensagem(resultado.message || "Conta criada com sucesso!");
 
-    if (res.ok) reset();
+    if (res.ok) {
+      reset();
+      router.push("/login"); // redireciona para login após cadastro
+    }
   };
 
   return (

@@ -8,7 +8,8 @@ import { useSession } from "next-auth/react";
 import Wellcome from "../components/Wellcome";
 
 export default function Dashboard() {
-  const { user } = useAuth();
+
+    const { user } = useAuth();
 
   const { data: session, status } = useSession();
 
@@ -27,8 +28,6 @@ export default function Dashboard() {
     investimentos: 0,
     educacao: 0,
   });
-
-  console.log(user);
 
   const buscarDados = async () => {
     setLoading(true);
@@ -57,7 +56,10 @@ export default function Dashboard() {
     buscarDados();
   }, []);
 
+
   if (!user && !session) return <Wellcome />;
+
+  console.log("user",user)
 
   return (
     <div className="p-4">
@@ -82,7 +84,7 @@ export default function Dashboard() {
         </div>
         <button
           onClick={buscarDados}
-          className="bg-blue-600 text-white px-4 py-2 rounded mt-6 md:mt-auto hover:bg-blue-700"
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg mt-6 md:mt-auto hover:bg-blue-700"
         >
           Filtrar
         </button>

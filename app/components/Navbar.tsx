@@ -79,12 +79,6 @@ export default function NavbarInferior() {
           </div>
         </Link>
 
-        <Link href="/chat">
-          <div className="flex flex-col items-center text-blue-600 hover:text-blue-800 transition">
-            <VscRobot size={20} />
-          </div>
-        </Link>
-
         <Link href="/goals">
           <div className="flex flex-col items-center text-blue-600 hover:text-blue-800 transition">
             <GoGoal size={20} />
