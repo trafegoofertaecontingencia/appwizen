@@ -3,9 +3,15 @@
 import { useState } from "react";
 import { useAuth } from "../context/auth-context";
 
+import { useSession } from "next-auth/react";
+
 export default function Form() {
 
   const { user } = useAuth();
+
+  const { data: session } = useSession();
+
+  console.log(session?.user)
 
   const [formData, setFormData] = useState({
     tipo: "receita",
@@ -27,7 +33,7 @@ export default function Form() {
     setStatus("salvando...");
 
     try {
-      const res = await fetch(`/api/transactions/create?userId=${user?.userId}`, {
+      const res = await fetch(`/api/transactions/create?userId=${user?.userId || session?.user?.id}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

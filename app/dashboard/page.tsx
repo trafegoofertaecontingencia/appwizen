@@ -34,7 +34,7 @@ export default function Dashboard() {
     setLoading(true);
     try {
       const query = new URLSearchParams({
-        userId: user?.userId,
+        userId: user?.userId || session?.user?.id,
         ...(dataInicio && { dataInicio }),
         ...(dataFim && { dataFim }),
       }).toString();
