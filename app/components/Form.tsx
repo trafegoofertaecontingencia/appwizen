@@ -11,8 +11,6 @@ export default function Form() {
 
   const { data: session } = useSession();
 
-  console.log(session?.user)
-
   const [formData, setFormData] = useState({
     tipo: "receita",
     categoria: "",
@@ -33,7 +31,7 @@ export default function Form() {
     setStatus("salvando...");
 
     try {
-      const res = await fetch(`/api/transactions/create?userId=${user?.userId || session?.user?.id}`, {
+      const res = await fetch(`/api/transactions/create?userId=${user?.userId || session?.user?.userId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

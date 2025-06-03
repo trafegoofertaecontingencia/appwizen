@@ -34,10 +34,12 @@ export default function Dashboard() {
     setLoading(true);
     try {
       const query = new URLSearchParams({
-        userId: user?.userId || session?.user?.id,
+        userId: user?.userId || session?.user?.userId,
         ...(dataInicio && { dataInicio }),
         ...(dataFim && { dataFim }),
       }).toString();
+
+      console.log(session?.user?.userId)
 
       const res = await fetch(`/api/dashboard?${query}`);
       const data = await res.json();
@@ -55,12 +57,12 @@ export default function Dashboard() {
 
   useEffect(() => {
     buscarDados();
-  }, []);
+  }, [user, session]);
 
   if(loading) return <Loading />
   if (!user && !session) return <Wellcome />;
 
-  console.log("user",user)
+  console.log("user",session?.user.userId)
 
   return (
     <div className="p-4">

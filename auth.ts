@@ -20,7 +20,7 @@ const authConfig: NextAuthConfig = {
         ...session,
         user: {
           ...session.user,
-          id: user.id,
+          userId: user.id,
         },
       };
     },
