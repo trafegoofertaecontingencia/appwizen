@@ -3,9 +3,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-
+import Link from "next/link";
 import { FcGoogle } from "react-icons/fc";
-
 import { signIn } from "next-auth/react";
 
 type FormData = {
@@ -38,10 +37,7 @@ export default function Login() {
       return;
     }
 
-    // Salva o token no localStorage
     localStorage.setItem("token", data.token);
-
-    // Redireciona para o dashboard
     router.push("/dashboard");
   };
 
@@ -77,7 +73,7 @@ export default function Login() {
       </form>
 
       <button
-        onClick={() => signIn("google", {callbackUrl: "/"})}
+        onClick={() => signIn("google", { callbackUrl: "/" })}
         className="w-full bg-white border border-gray-300 py-2 rounded flex items-center justify-center gap-2 hover:shadow-md transition"
       >
         <FcGoogle size={24} />
@@ -87,6 +83,13 @@ export default function Login() {
       {mensagem && (
         <p className="text-center text-red-500 text-sm">{mensagem}</p>
       )}
+
+      <p className="text-center text-sm text-gray-600">
+        Ainda não tem uma conta?{" "}
+        <Link href="/sign-in" className="text-blue-600 hover:underline font-medium">
+          Cadastre-se
+        </Link>
+      </p>
     </div>
   );
 }

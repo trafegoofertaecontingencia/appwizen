@@ -6,6 +6,7 @@ import { useAuth } from "../context/auth-context";
 
 import { useSession } from "next-auth/react";
 import Wellcome from "../components/Wellcome";
+import Loading from "../components/Loading";
 
 export default function Dashboard() {
 
@@ -56,7 +57,7 @@ export default function Dashboard() {
     buscarDados();
   }, []);
 
-
+  if(loading) return <Loading />
   if (!user && !session) return <Wellcome />;
 
   console.log("user",user)
