@@ -6,7 +6,6 @@ import { FiMessageSquare } from "react-icons/fi";
 import { IoClose } from "react-icons/io5";
 
 import { useAuth } from "../context/auth-context";
-
 import { useSession } from "next-auth/react";
 
 type Message = {
@@ -16,24 +15,40 @@ type Message = {
 
 export default function Chat() {
   const { user } = useAuth();
-
-  const { data: session, status } = useSession();
-
+  const { data: session } = useSession();
   const userId = user?.id || session?.user?.userId;
 
   const [prompt, setPrompt] = useState("");
-  const [resposta, setResposta] = useState("");
   const [loading, setLoading] = useState(false);
   const [historico, setHistorico] = useState<Message[]>([]);
   const [showChat, setShowChat] = useState(false);
+  const [showFloatingUI, setShowFloatingUI] = useState(false);
 
+  // Exibir animação de sugestão a cada 10s, visível por 5s
+  useEffect(() => {
+    if (showChat) {
+      setShowFloatingUI(false); // oculta imediatamente se o chat abrir
+      return; // interrompe o ciclo de animação
+    }
+
+    const interval = setInterval(() => {
+      setShowFloatingUI(true);
+      const timeout = setTimeout(() => setShowFloatingUI(false), 5000);
+
+      return () => clearTimeout(timeout);
+    }, 10000);
+
+    return () => clearInterval(interval);
+  }, [showChat]);
 
   useEffect(() => {
-    fetch(`/api/messages?userId=${userId}`)
-      .then((res) => res.json())
-      .then((data: Message[]) => setHistorico(Array.isArray(data) ? data : []))
-      .catch(() => setHistorico([]));
-  }, [showChat, userId]); // recarrega histórico ao abrir o chat
+    if (showChat && userId) {
+      fetch(`/api/messages?userId=${userId}`)
+        .then((res) => res.json())
+        .then((data: Message[]) => setHistorico(Array.isArray(data) ? data : []))
+        .catch(() => setHistorico([]));
+    }
+  }, [showChat, userId]);
 
   const enviarMensagem = async () => {
     if (!prompt.trim()) return;
@@ -48,16 +63,14 @@ export default function Chat() {
 
       const data = await res.json();
 
-      console.log(data);
-
       const novaMensagem: Message[] = [
         { role: "user", content: prompt },
         { role: "assistant", content: data.resposta || "Sem resposta" },
       ];
 
       setHistorico((prev) => [...prev, ...novaMensagem]);
-    } catch (err) {
-      setResposta("Erro ao consultar a IA");
+    } catch {
+      // erro silencioso
     } finally {
       setLoading(false);
       setPrompt("");
@@ -66,6 +79,7 @@ export default function Chat() {
 
   return (
     <div>
+      {/* Chat aberto */}
       <AnimatePresence>
         {showChat && (
           <motion.div
@@ -73,7 +87,7 @@ export default function Chat() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 50 }}
             transition={{ duration: 0.3 }}
-            className="fixed bottom-25 right-6 w-96 bg-white border rounded-xl shadow-lg p-4 z-50"
+            className="fixed bottom-28 right-6 w-96 bg-white border rounded-xl shadow-lg p-4 z-50"
           >
             <div className="flex justify-between items-center mb-3">
               <h2 className="font-semibold">Consultor Financeiro</h2>
@@ -110,7 +124,7 @@ export default function Chat() {
             <button
               onClick={enviarMensagem}
               disabled={loading || (!session && !user)}
-              className={`w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700`}
+              className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
             >
               {loading ? "Consultando..." : "Enviar"}
             </button>
@@ -118,12 +132,30 @@ export default function Chat() {
         )}
       </AnimatePresence>
 
-      <button
-        onClick={() => setShowChat((prev) => !prev)}
-        className="fixed bottom-12 right-6 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 z-40"
-      >
-        <FiMessageSquare className="text-2xl" />
-      </button>
+      {/* Botão + dica animada (quando o chat está fechado) */}
+      <AnimatePresence>
+        {showFloatingUI && !showChat && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.5 }}
+            className="fixed bottom-12 right-6 flex items-center space-x-2 z-40"
+          >
+            <div className="bg-blue-100 text-gray-700 shadow px-4 py-2 rounded-lg text-sm">
+              Fale com seu consultor financeiro
+            </div>
+            <motion.button
+              onClick={() => setShowChat(true)}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              className="bg-blue-500 text-white p-4 rounded-full shadow-lg"
+            >
+              <FiMessageSquare className="text-2xl" />
+            </motion.button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
