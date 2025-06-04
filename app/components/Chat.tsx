@@ -73,7 +73,7 @@ export default function Chat() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 50 }}
             transition={{ duration: 0.3 }}
-            className="fixed bottom-20 right-6 w-96 bg-white border rounded-xl shadow-lg p-4 z-50"
+            className="fixed bottom-25 right-6 w-96 bg-white border rounded-xl shadow-lg p-4 z-50"
           >
             <div className="flex justify-between items-center mb-3">
               <h2 className="font-semibold">Consultor Financeiro</h2>
@@ -120,7 +120,7 @@ export default function Chat() {
 
       <button
         onClick={() => setShowChat((prev) => !prev)}
-        className="fixed bottom-6 right-6 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 z-40"
+        className="fixed bottom-12 right-6 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 z-40"
       >
         <FiMessageSquare className="text-2xl" />
       </button>

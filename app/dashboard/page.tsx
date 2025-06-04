@@ -1,23 +1,21 @@
-"use client";
+"use client"
 
 import { useEffect, useState } from "react";
 import FinanceCharts from "../components/FinanceCharts";
 import { useAuth } from "../context/auth-context";
-
 import { useSession } from "next-auth/react";
 import Wellcome from "../components/Wellcome";
 import Loading from "../components/Loading";
+import DateFilter from "../components/DateFilter";
 
 export default function Dashboard() {
-
-    const { user } = useAuth();
-
-  const { data: session, status } = useSession();
-
+  const { user } = useAuth();
+  const { data: session } = useSession();
 
   const [loading, setLoading] = useState(true);
   const [dataInicio, setDataInicio] = useState("");
   const [dataFim, setDataFim] = useState("");
+  const [mostrarFiltro, setMostrarFiltro] = useState(false);
 
   const [receitaTotal, setReceitaTotal] = useState(0);
   const [despesaTotal, setDespesaTotal] = useState(0);
@@ -40,8 +38,6 @@ export default function Dashboard() {
         ...(dataFim && { dataFim }),
       }).toString();
 
-      console.log(session?.user?.userId)
-
       const res = await fetch(`/api/dashboard?${query}`);
       const data = await res.json();
 
@@ -60,39 +56,20 @@ export default function Dashboard() {
     buscarDados();
   }, [user, session]);
 
-  if(loading) return <Loading />
+  if (loading) return <Loading />;
   if (!user && !session) return <Wellcome />;
 
-  console.log("user",session?.user.userId)
-
   return (
-    <div className="p-4">
-      <div className="flex flex-col md:flex-row gap-4 mb-6">
-        <div className="flex flex-col">
-          <label className="text-sm text-gray-600">Data Início</label>
-          <input
-            type="date"
-            value={dataInicio}
-            onChange={(e) => setDataInicio(e.target.value)}
-            className="border rounded px-2 py-1"
-          />
-        </div>
-        <div className="flex flex-col">
-          <label className="text-sm text-gray-600">Data Fim</label>
-          <input
-            type="date"
-            value={dataFim}
-            onChange={(e) => setDataFim(e.target.value)}
-            className="border rounded px-2 py-1"
-          />
-        </div>
-        <button
-          onClick={buscarDados}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg mt-6 md:mt-auto hover:bg-blue-700"
-        >
-          Filtrar
-        </button>
-      </div>
+    <div>
+      <DateFilter
+        dataInicio={dataInicio}
+        dataFim={dataFim}
+        setDataInicio={setDataInicio}
+        setDataFim={setDataFim}
+        onFiltrar={buscarDados}
+        mostrarFiltro={mostrarFiltro}
+        toggleFiltro={() => setMostrarFiltro((prev) => !prev)}
+      />
 
       <FinanceCharts
         receitaTotal={receitaTotal}

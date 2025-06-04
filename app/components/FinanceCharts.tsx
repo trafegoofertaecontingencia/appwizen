@@ -134,7 +134,7 @@ export default function FinanceCharts({
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 pt-0">
       <div className="bg-white p-4 rounded-2xl shadow">
         <Pie data={pieData} options={pieOptions} />
       </div>
