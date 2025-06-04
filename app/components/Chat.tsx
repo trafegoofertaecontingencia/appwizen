@@ -29,7 +29,7 @@ export default function Chat() {
 
 
   useEffect(() => {
-    fetch(`/api/messages?userId=${user?.id || session?.user?.userId}`)
+    fetch(`/api/messages?userId=${userId}`)
       .then((res) => res.json())
       .then((data: Message[]) => setHistorico(Array.isArray(data) ? data : []))
       .catch(() => setHistorico([]));
