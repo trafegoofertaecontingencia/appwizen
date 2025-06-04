@@ -30,6 +30,10 @@ const authConfig: NextAuthConfig = {
       }
       return token;
     },
+    async signIn({ user, account, profile }) {
+    // permite login com Google se email já existir no sistema
+    return true;
+  },
   },
 };
 

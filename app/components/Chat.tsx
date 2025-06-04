@@ -33,7 +33,7 @@ export default function Chat() {
       .then((res) => res.json())
       .then((data: Message[]) => setHistorico(Array.isArray(data) ? data : []))
       .catch(() => setHistorico([]));
-  }, [showChat]); // recarrega histórico ao abrir o chat
+  }, [showChat, userId]); // recarrega histórico ao abrir o chat
 
   const enviarMensagem = async () => {
     if (!prompt.trim()) return;
@@ -47,6 +47,8 @@ export default function Chat() {
       });
 
       const data = await res.json();
+
+      console.log(data);
 
       const novaMensagem: Message[] = [
         { role: "user", content: prompt },
