@@ -15,18 +15,23 @@ type Message = {
 };
 
 export default function Chat() {
+  const { user } = useAuth();
+
+  const { data: session, status } = useSession();
+
+  const userId = user?.id || session?.user?.userId;
+
   const [prompt, setPrompt] = useState("");
   const [resposta, setResposta] = useState("");
   const [loading, setLoading] = useState(false);
   const [historico, setHistorico] = useState<Message[]>([]);
   const [showChat, setShowChat] = useState(false);
 
-  const userId = "6835cd92635cddf8b201fec1"; // substitua se necessário
 
   useEffect(() => {
-    fetch(`/api/messages?userId=${userId}`)
+    fetch(`/api/messages?userId=${user?.id || session?.user?.userId}`)
       .then((res) => res.json())
-      .then((data: Message[]) => setHistorico(data))
+      .then((data: Message[]) => setHistorico(Array.isArray(data) ? data : []))
       .catch(() => setHistorico([]));
   }, [showChat]); // recarrega histórico ao abrir o chat
 
@@ -56,10 +61,6 @@ export default function Chat() {
       setPrompt("");
     }
   };
-
-  const { user } = useAuth();
-
-  const { data: session, status } = useSession();
 
   return (
     <div>
@@ -98,7 +99,9 @@ export default function Chat() {
               className="w-full p-2 border rounded mb-2"
               rows={2}
               placeholder="Digite sua dúvida financeira..."
-              value={(!session && !user) ? "Você precisa estar logado..." : prompt}
+              value={
+                !session && !user ? "Você precisa estar logado..." : prompt
+              }
               onChange={(e) => setPrompt(e.target.value)}
             />
 

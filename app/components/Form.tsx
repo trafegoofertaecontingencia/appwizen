@@ -1,60 +1,66 @@
 "use client";
 
-import { useState } from "react";
-import { useAuth } from "../context/auth-context";
-
+import { useForm } from "react-hook-form";
 import { useSession } from "next-auth/react";
+import { useAuth } from "../context/auth-context";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+
+type FormInputs = {
+  tipo: string;
+  categoria: string;
+  valor: string;
+  data: string;
+};
 
 export default function Form() {
 
-  const { user } = useAuth();
+  const router = useRouter();
 
-  const { data: session } = useSession();
-
-  const [formData, setFormData] = useState({
-    tipo: "receita",
-    categoria: "",
-    valor: "",
-    data: "",
+  const { register, handleSubmit, watch, reset } = useForm<FormInputs>({
+    defaultValues: {
+      tipo: "receita",
+    },
   });
 
+  console.log(watch("categoria"))
+
+  const tipoSelecionado = watch("tipo");
   const [status, setStatus] = useState("");
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  const { user } = useAuth();
+  const { data: session } = useSession();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setStatus("salvando...");
+  const onSubmit = async (data: FormInputs) => {
+    setStatus("Salvando...");
 
     try {
-      const res = await fetch(`/api/transactions/create?userId=${user?.userId || session?.user?.userId}`, {
+      const userId = user?.userId || session?.user?.userId;
+
+      const res = await fetch(`/api/transactions/create?userId=${userId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(data),
       });
 
-      const data = await res.json();
+      const result = await res.json();
 
       if (res.ok) {
         setStatus("Transação salva com sucesso!");
-        setFormData({ ...formData, valor: "", data: "" });
+        reset({ ...data, valor: "", data: "" });
+        router.push('/dashboard');
       } else {
-        setStatus(`Erro: ${data.error}`);
+        setStatus(`Erro: ${result.error}`);
       }
     } catch (err) {
       console.error(err);
-      setStatus("Erro ao conectar com o servidor");
+      setStatus("Erro ao conectar com o servidor.");
     }
   };
 
-
   return (
     <form
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit(onSubmit)}
       className="max-w-md mx-auto bg-white p-6 rounded-xl shadow space-y-4"
     >
       <h2 className="text-xl font-bold">Cadastro Financeiro</h2>
@@ -62,9 +68,7 @@ export default function Form() {
       <div>
         <label className="block mb-1 font-medium">Tipo</label>
         <select
-          name="tipo"
-          value={formData.tipo}
-          onChange={handleChange}
+          {...register("tipo")}
           className="w-full border p-2 rounded"
         >
           <option value="receita">Receita</option>
@@ -74,11 +78,9 @@ export default function Form() {
 
       <div>
         <label className="block mb-1 font-medium">Categoria</label>
-        {formData.tipo === "gasto" ? (
+        {tipoSelecionado === "gasto" ? (
           <select
-            name="categoria"
-            value={formData.categoria}
-            onChange={handleChange}
+            {...register("categoria")}
             className="w-full border p-2 rounded"
           >
             <option value="mercado">Mercado</option>
@@ -90,12 +92,10 @@ export default function Form() {
           </select>
         ) : (
           <input
-            className="border w-[100%] p-2 rounded"
-            value={formData.categoria}
-            onChange={handleChange}
-            name="categoria"
             type="text"
-            placeholder="Digite o tipo de despesa"
+            placeholder="Digite o tipo de receita"
+            className="border w-full p-2 rounded"
+            {...register("categoria")}
           />
         )}
       </div>
@@ -104,12 +104,10 @@ export default function Form() {
         <label className="block mb-1 font-medium">Valor (R$)</label>
         <input
           type="number"
-          name="valor"
-          value={formData.valor}
-          onChange={handleChange}
-          className="w-full border p-2 rounded"
+          step="0.01"
           placeholder="Ex: 150.00"
-          required
+          className="w-full border p-2 rounded"
+          {...register("valor", { required: true })}
         />
       </div>
 
@@ -117,11 +115,8 @@ export default function Form() {
         <label className="block mb-1 font-medium">Data</label>
         <input
           type="date"
-          name="data"
-          value={formData.data}
-          onChange={handleChange}
           className="w-full border p-2 rounded"
-          required
+          {...register("data", { required: true })}
         />
       </div>
 
