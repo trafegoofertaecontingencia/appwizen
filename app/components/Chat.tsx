@@ -22,19 +22,17 @@ export default function Chat() {
   const [loading, setLoading] = useState(false);
   const [historico, setHistorico] = useState<Message[]>([]);
   const [showChat, setShowChat] = useState(false);
-  const [showFloatingUI, setShowFloatingUI] = useState(false);
+  const [showFloatingMessage, setShowFloatingMessage] = useState(false);
 
-  // Exibir animação de sugestão a cada 10s, visível por 5s
   useEffect(() => {
     if (showChat) {
-      setShowFloatingUI(false); // oculta imediatamente se o chat abrir
-      return; // interrompe o ciclo de animação
+      setShowFloatingMessage(false);
+      return;
     }
 
     const interval = setInterval(() => {
-      setShowFloatingUI(true);
-      const timeout = setTimeout(() => setShowFloatingUI(false), 5000);
-
+      setShowFloatingMessage(true);
+      const timeout = setTimeout(() => setShowFloatingMessage(false), 5000);
       return () => clearTimeout(timeout);
     }, 10000);
 
@@ -79,7 +77,7 @@ export default function Chat() {
 
   return (
     <div>
-      {/* Chat aberto */}
+      {/* Chat visível */}
       <AnimatePresence>
         {showChat && (
           <motion.div
@@ -132,30 +130,33 @@ export default function Chat() {
         )}
       </AnimatePresence>
 
-      {/* Botão + dica animada (quando o chat está fechado) */}
+      {/* Mensagem animada apontando para o botão */}
       <AnimatePresence>
-        {showFloatingUI && !showChat && (
+        {showFloatingMessage && !showChat && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.5 }}
-            className="fixed bottom-12 right-6 flex items-center space-x-2 z-40"
+            className="fixed bottom-15 right-24 z-40"
           >
-            <div className="bg-blue-100 text-gray-700 shadow px-4 py-2 rounded-lg text-sm">
+            <div className="relative bg-blue-300 text-gray-800 shadow px-4 py-2 rounded-lg text-sm">
               Fale com seu consultor financeiro
+              <div className="absolute right-[-10px] top-1/2 -translate-y-1/2 w-0 h-0 border-t-8 border-b-8 border-l-8 border-transparent border-l-blue-300"></div>
             </div>
-            <motion.button
-              onClick={() => setShowChat(true)}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-blue-500 text-white p-4 rounded-full shadow-lg"
-            >
-              <FiMessageSquare className="text-2xl" />
-            </motion.button>
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Botão fixo */}
+      <motion.button
+        onClick={() => setShowChat(true)}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+        className="fixed bottom-12 right-6 bg-blue-600 text-white p-4 rounded-full shadow-lg z-40 hover:bg-blue-700"
+      >
+        <FiMessageSquare className="text-2xl" />
+      </motion.button>
     </div>
   );
 }
