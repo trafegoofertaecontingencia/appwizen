@@ -43,7 +43,9 @@ export default function Chat() {
     if (showChat && userId) {
       fetch(`/api/messages?userId=${userId}`)
         .then((res) => res.json())
-        .then((data: Message[]) => setHistorico(Array.isArray(data) ? data : []))
+        .then((data: Message[]) =>
+          setHistorico(Array.isArray(data) ? data : [])
+        )
         .catch(() => setHistorico([]));
     }
   }, [showChat, userId]);
@@ -94,7 +96,12 @@ export default function Chat() {
               </button>
             </div>
 
-            <div className="h-64 overflow-y-auto space-y-2 mb-4">
+            <div
+              className="h-64 overflow-y-auto space-y-2 mb-4"
+              ref={(el) => {
+                if (el) el.scrollTop = el.scrollHeight;
+              }}
+            >
               {historico.map((msg, idx) => (
                 <div
                   key={idx}
