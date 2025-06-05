@@ -11,7 +11,7 @@ import {
   ArcElement,
   ChartOptions,
 } from "chart.js";
-import { Bar, Pie } from "react-chartjs-2";
+import { Bar, Doughnut } from "react-chartjs-2";
 import Loading from "./Loading";
 
 ChartJS.register(
@@ -46,13 +46,7 @@ export default function FinanceCharts({
   categorias,
   loading,
 }: Props) {
-
-
-  if (loading) {
-    return (
-      <Loading />
-    );
-  }
+  if (loading) return <Loading />;
 
   const pieData = {
     labels: ["Receita", "Despesa", "Saldo"],
@@ -67,10 +61,8 @@ export default function FinanceCharts({
     ],
   };
 
-  console.log(Object.keys(categorias));
-
   const barData = {
-    labels: ["Mercado", "Delivery", "Lazer", "outros"],
+    labels: ["Mercado", "Delivery", "Lazer", "Outros"],
     datasets: [
       {
         label: "Gastos por Categoria",
@@ -83,6 +75,7 @@ export default function FinanceCharts({
 
   const barOptions: ChartOptions<"bar"> = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: { display: false },
       title: {
@@ -100,8 +93,9 @@ export default function FinanceCharts({
     },
   };
 
-  const pieOptions: ChartOptions<"pie"> = {
+  const pieOptions: ChartOptions<"doughnut"> = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         position: "bottom",
@@ -134,12 +128,16 @@ export default function FinanceCharts({
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 pt-0 bg-blue-50">
-      <div className="bg-white p-4 rounded-2xl shadow">
-        <Pie data={pieData} options={pieOptions} />
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 bg-blue-50">
+      <div className="bg-white p-4 rounded-2xl shadow min-h-[300px]">
+        <div className="relative h-[300px] md:h-[350px]">
+          <Doughnut data={pieData} options={pieOptions} />
+        </div>
       </div>
-      <div className="bg-white p-4 rounded-2xl shadow">
-        <Bar data={barData} options={barOptions} />
+      <div className="bg-white p-4 rounded-2xl shadow min-h-[300px]">
+        <div className="relative h-[300px] md:h-[350px]">
+          <Bar data={barData} options={barOptions} />
+        </div>
       </div>
     </div>
   );

@@ -7,6 +7,7 @@ import { useSession } from "next-auth/react";
 import Wellcome from "../components/Wellcome";
 import Loading from "../components/Loading";
 import DateFilter from "../components/DateFilter";
+import Chat from "../components/Chat";
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -78,6 +79,7 @@ export default function Dashboard() {
         categorias={categorias}
         loading={loading}
       />
+      <Chat />
     </div>
   );
 }

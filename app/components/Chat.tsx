@@ -157,7 +157,7 @@ export default function Chat() {
 
       {/* Botão fixo */}
       <motion.button
-        onClick={() => setShowChat(true)}
+        onClick={() => setShowChat(!showChat)}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
         className="fixed bottom-12 right-6 bg-blue-600 text-white p-4 rounded-full shadow-lg z-40 hover:bg-blue-700"
