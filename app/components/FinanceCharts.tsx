@@ -61,38 +61,6 @@ export default function FinanceCharts({
     ],
   };
 
-  const barData = {
-    labels: ["Mercado", "Delivery", "Lazer", "Outros"],
-    datasets: [
-      {
-        label: "Gastos por Categoria",
-        data: Object.values(categorias),
-        backgroundColor: "#60a5fa",
-        borderRadius: 8,
-      },
-    ],
-  };
-
-  const barOptions: ChartOptions<"bar"> = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: { display: false },
-      title: {
-        display: true,
-        text: "Gastos por Categoria",
-        font: { size: 18 },
-      },
-    },
-    scales: {
-      y: {
-        ticks: {
-          callback: (value) => `R$ ${value}`,
-        },
-      },
-    },
-  };
-
   const pieOptions: ChartOptions<"doughnut"> = {
     responsive: true,
     maintainAspectRatio: false,
@@ -127,6 +95,61 @@ export default function FinanceCharts({
     },
   };
 
+  const categoriaNomes = {
+    delivery: "Delivery",
+    transporte: "Transporte",
+    moradia: "Moradia",
+    lazer: "Lazer",
+    investimentos: "Investimentos",
+    educacao: "Educação",
+  };
+
+  const despesasLabels = Object.keys(categorias).map(
+    (key) => categoriaNomes[key as keyof typeof categoriaNomes]
+  );
+
+  const despesasValues = Object.values(categorias);
+
+const barData = {
+  labels: despesasLabels,
+  datasets: [
+    {
+      label: "Despesas",
+      data: despesasValues,
+      backgroundColor: "#f87171",
+      borderRadius: 8,
+      maxBarThickness: 40, // <- controla a espessura máxima
+      minBarLength: 2,     // <- impede que barras muito pequenas sumam
+    },
+  ],
+};
+
+  const barOptions: ChartOptions<"bar"> = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: (ctx) => `R$ ${ctx.parsed.y}`,
+        },
+      },
+      title: {
+        display: true,
+        text: "Despesas por Categoria",
+        font: { size: 18 },
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          callback: (value) => `R$ ${value}`,
+        },
+      },
+    },
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 bg-blue-50">
       <div className="bg-white p-4 rounded-2xl shadow min-h-[300px]">
@@ -134,6 +157,7 @@ export default function FinanceCharts({
           <Doughnut data={pieData} options={pieOptions} />
         </div>
       </div>
+
       <div className="bg-white p-4 rounded-2xl shadow min-h-[300px]">
         <div className="relative h-[300px] md:h-[350px]">
           <Bar data={barData} options={barOptions} />
