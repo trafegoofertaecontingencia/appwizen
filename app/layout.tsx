@@ -25,7 +25,7 @@ export default function RootLayout({
       <body className={cn("bg-background antialiased font-sans")}>
         <AuthProvider>
           <SessionProvider>
-            <div className="min-h-[95vh]">{children}</div>
+            {children}
             <Sidebar />
           </SessionProvider>
         </AuthProvider>

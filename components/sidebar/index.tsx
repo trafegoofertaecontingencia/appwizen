@@ -7,7 +7,7 @@ import { Settings, ChartColumnBig, NotebookPen, Target  } from "lucide-react";
 
 export default function Sidebar() {
   return (
-    <div className="flex w-full flex-col bg-muted/40 border">
+    <div className="md:px-40 fixed bottom-0 flex w-full flex-col bg-muted/40 border">
       <div className="flex flex-col">
         <header className="flex items-center justify-between p-4">
           <Sheet>
