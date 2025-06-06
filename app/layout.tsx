@@ -6,8 +6,14 @@ import Navbar from "./components/Navbar";
 import { AuthProvider } from "@/app/context/auth-context";
 import { SessionProvider } from "next-auth/react";
 
+import { cn } from "@/lib/utils";
+import Sidebar from "@/components/sidebar";
+
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
-const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
 
 export default function RootLayout({
   children,
@@ -16,13 +22,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={cn("bg-background antialiased font-sans")}>
         <AuthProvider>
           <SessionProvider>
-            {children}
-          <Navbar />
+            <div className="min-h-[95vh]">{children}</div>
+            <Sidebar />
           </SessionProvider>
         </AuthProvider>
       </body>

@@ -3,6 +3,9 @@
 
 import { FiFilter } from "react-icons/fi";
 import { AnimatePresence, motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 interface DateFilterProps {
   dataInicio: string;
@@ -24,15 +27,16 @@ export default function DateFilter({
   toggleFiltro,
 }: DateFilterProps) {
   return (
-    <div>
-      <div className="flex justify-end bg-blue-400 p-1">
-        <button
+    <div className="space-y-4">
+      <div className="flex justify-end">
+        <Button
           onClick={toggleFiltro}
-          className="text-white transition p-2 rounded-lg flex items-center gap-2"
+          variant="outline"
+          className="flex items-center gap-2"
         >
-          <FiFilter size={24} />
+          <FiFilter size={18} />
           <span className="text-sm hidden md:inline">Filtrar por data</span>
-        </button>
+        </Button>
       </div>
 
       <AnimatePresence>
@@ -41,33 +45,31 @@ export default function DateFilter({
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="overflow-hidden bg-white p-4 rounded-xl shadow mb-4 grid grid-cols-1 md:grid-cols-3 gap-4"
+            className="overflow-hidden bg-muted/40 border border-muted rounded-xl p-4 grid grid-cols-1 md:grid-cols-3 gap-4"
           >
-            <div>
-              <label className="text-sm text-gray-600">Data Início</label>
-              <input
+            <div className="space-y-2">
+              <Label className="text-muted-foreground">Data Início</Label>
+              <Input
                 type="date"
                 value={dataInicio}
                 onChange={(e) => setDataInicio(e.target.value)}
-                className="w-full border rounded px-3 py-2 mt-1"
               />
             </div>
-            <div>
-              <label className="text-sm text-gray-600">Data Fim</label>
-              <input
+            <div className="space-y-2">
+              <Label className="text-muted-foreground">Data Fim</Label>
+              <Input
                 type="date"
                 value={dataFim}
                 onChange={(e) => setDataFim(e.target.value)}
-                className="w-full border rounded px-3 py-2 mt-1"
               />
             </div>
             <div className="flex items-end">
-              <button
+              <Button
                 onClick={onFiltrar}
-                className="w-full bg-blue-400 text-white py-2 rounded transition"
+                className="w-full"
               >
                 Aplicar Filtro
-              </button>
+              </Button>
             </div>
           </motion.div>
         )}
