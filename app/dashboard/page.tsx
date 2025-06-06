@@ -67,10 +67,10 @@ export default function Dashboard() {
   if (!user && !session) return <Wellcome />;
 
   return (
-    <div className="p-6 md:p-10 bg-background text-foreground space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Painel Financeiro</h1>
-        <Badge variant="outline" className="text-sm">
+    <div className="p-6 md:p-10 bg-background text-foreground space-y-6 min-h-screen">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <h1 className="text-3xl font-semibold tracking-tight">Painel Financeiro</h1>
+        <Badge variant="outline" className="text-sm px-3 py-1 rounded-full">
           {new Date().toLocaleDateString("pt-BR")}
         </Badge>
       </div>
@@ -85,53 +85,19 @@ export default function Dashboard() {
         toggleFiltro={() => setMostrarFiltro((prev) => !prev)}
       />
 
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card>
-          <CardHeader>
-            <CardTitle>Receita Total</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-lg font-semibold text-green-400">
-              R$ {receitaTotal.toFixed(2)}
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Despesa Total</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-lg font-semibold text-red-400">
-              R$ {despesaTotal.toFixed(2)}
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Saldo Final</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Progress value={calcularPorcentagem(saldoFinal, receitaTotal)} />
-            <p
-              className={`mt-2 text-lg font-semibold ${
-                saldoFinal >= 0 ? "text-green-300" : "text-red-400"
-              }`}
-            >
-              R$ {saldoFinal.toFixed(2)}
-            </p>
-          </CardContent>
-        </Card>
+      <div className="grid gap-6 md:grid-cols-3">
+        <DashboardCard title="Receita Total" value={receitaTotal} type="receita" />
+        <DashboardCard title="Despesa Total" value={despesaTotal} type="despesa" />
+        <DashboardCard title="Saldo Final" value={saldoFinal} type="saldo" progress={calcularPorcentagem(saldoFinal, receitaTotal)} />
       </div>
 
       <Tabs defaultValue="visao" className="w-full mt-6">
-        <TabsList className="bg-muted">
-          <TabsTrigger value="visao">Visão Geral</TabsTrigger>
-          <TabsTrigger value="categorias">Categorias</TabsTrigger>
+        <TabsList className="bg-muted flex justify-start">
+          <TabsTrigger value="visao">📊 Visão Geral</TabsTrigger>
+          <TabsTrigger value="categorias">📁 Por Categoria</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="visao">
+        <TabsContent value="visao" className="mt-6">
           <FinanceCharts
             receitaTotal={receitaTotal}
             despesaTotal={despesaTotal}
@@ -141,15 +107,18 @@ export default function Dashboard() {
           />
         </TabsContent>
 
-        <TabsContent value="categorias">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+        <TabsContent value="categorias" className="mt-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {Object.entries(categorias).map(([categoria, valor]) => (
-              <Card key={categoria}>
+              <Card
+                key={categoria}
+                className="bg-card/90 border border-border shadow-md hover:shadow-lg transition-all duration-300"
+              >
                 <CardHeader>
-                  <CardTitle className="capitalize">{categoria}</CardTitle>
+                  <CardTitle className="capitalize text-muted-foreground">{categoria}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-lg font-semibold text-muted-foreground">
+                  <p className="text-xl font-medium text-foreground">
                     R$ {valor.toFixed(2)}
                   </p>
                 </CardContent>
@@ -164,9 +133,45 @@ export default function Dashboard() {
   );
 }
 
+function DashboardCard({
+  title,
+  value,
+  type,
+  progress,
+}: {
+  title: string;
+  value: number;
+  type: "receita" | "despesa" | "saldo";
+  progress?: number;
+}) {
+  const color =
+    type === "receita"
+      ? "text-green-400"
+      : type === "despesa"
+      ? "text-red-400"
+      : value >= 0
+      ? "text-green-300"
+      : "text-red-400";
+
+  return (
+    <Card className="bg-card/90 border border-border shadow-md hover:shadow-lg transition-all duration-300">
+      <CardHeader>
+        <CardTitle>{title}</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-2">
+        {progress !== undefined && (
+          <Progress value={progress} className="h-2 bg-muted" />
+        )}
+        <p className={`text-xl font-semibold ${color}`}>
+          R$ {value.toFixed(2)}
+        </p>
+      </CardContent>
+    </Card>
+  );
+}
+
 function calcularPorcentagem(valor: number, total: number) {
   if (!total) return 0;
   const porcentagem = (valor / total) * 100;
   return Math.min(Math.max(porcentagem, 0), 100);
 }
-
