@@ -95,13 +95,15 @@ export default function FinanceCharts({
     },
   };
 
+  console.log(categorias)
+
   const categoriaNomes = {
+    mercado: "Mercado",
     delivery: "Delivery",
     transporte: "Transporte",
-    moradia: "Moradia",
-    lazer: "Lazer",
     investimentos: "Investimentos",
-    educacao: "Educação",
+    lazer: "Lazer",
+    outros: "Outros",
   };
 
   const despesasLabels = Object.keys(categorias).map(

@@ -13,9 +13,13 @@ export default function Home() {
 
   const { data: session } = useSession();
 
+  
+
   if (loading) return <Loading />;
 
-  if (!user && !session) return <Wellcome />;
+
+
+  if (!user && !session) return <Wellcome />
 
   return (
     <div>

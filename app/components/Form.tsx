@@ -25,9 +25,12 @@ export default function Form() {
     },
   });
 
-  console.log(watch("categoria"))
 
   const tipoSelecionado = watch("tipo");
+  const selecionado = watch("categoria");
+
+  console.log(selecionado);
+
   const [status, setStatus] = useState("");
 
   const { user } = useAuth();
@@ -35,6 +38,8 @@ export default function Form() {
 
   const onSubmit = async (data: FormInputs) => {
     setStatus("Salvando...");
+
+    console.log("data", data)
 
     try {
       const userId = user?.userId || session?.user?.userId;
@@ -87,7 +92,7 @@ export default function Form() {
               <option value="mercado">Mercado</option>
               <option value="delivery">Delivery</option>
               <option value="transporte">Transporte</option>
-              <option value="investimento">Investimento</option>
+              <option value="investimentos">Investimentos</option>
               <option value="lazer">Lazer</option>
               <option value="outros">Outros</option>
             </select>
