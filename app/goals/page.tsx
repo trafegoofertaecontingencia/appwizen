@@ -23,7 +23,7 @@ export default function GoalsPage() {
     <div className="p-6 max-w-2xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold tracking-tight">Metas Financeiras</h1>
-        <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+        <Button className="bg-[#c8fe04] text-white">
           <Plus className="w-4 h-4 mr-2" />
           Criar Meta
         </Button>
@@ -37,15 +37,15 @@ export default function GoalsPage() {
           <div className="flex items-center justify-between mb-2">
             <span className="font-medium text-foreground">{meta.titulo}</span>
             <div className="flex items-center gap-2">
-              <span className="text-sm text-blue-600">{meta.progresso}%</span>
-              <Button size="icon" variant="ghost" className="h-8 w-8 text-blue-600 hover:bg-blue-50">
+              <span className="text-sm text-[#c8fe04]">{meta.progresso}%</span>
+              <Button size="icon" variant="ghost" className="h-8 w-8 text-[#c8fe04]">
                 <Pencil className="w-4 h-4" />
               </Button>
             </div>
           </div>
           <div className="w-full bg-muted rounded-full h-2 mb-2">
             <div
-              className="bg-blue-600 h-2 rounded-full transition-all"
+              className="bg-[#c8fe04] h-2 rounded-full transition-all"
               style={{ width: `${meta.progresso}%` }}
             />
           </div>

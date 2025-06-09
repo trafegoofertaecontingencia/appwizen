@@ -129,7 +129,7 @@ export default function Chat() {
             <button
               onClick={enviarMensagem}
               disabled={loading || (!session && !user)}
-              className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
+              className="w-full bg-[#c8fe04] text-white p-2 rounded"
             >
               {loading ? "Consultando..." : "Enviar"}
             </button>
@@ -147,7 +147,7 @@ export default function Chat() {
             transition={{ duration: 0.5 }}
             className="fixed bottom-15 right-24 z-40"
           >
-            <div className="relative bg-blue-300 text-gray-800 shadow px-4 py-2 rounded-lg text-sm">
+            <div className="relative bg-[#c8fe04] text-gray-800 shadow px-4 py-2 rounded-lg text-sm">
               Fale com seu consultor financeiro
               <div className="absolute right-[-10px] top-1/2 -translate-y-1/2 w-0 h-0 border-t-8 border-b-8 border-l-8 border-transparent border-l-blue-300"></div>
             </div>
@@ -160,7 +160,7 @@ export default function Chat() {
         onClick={() => setShowChat(!showChat)}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
-        className="fixed bottom-12 right-6 bg-blue-600 text-white p-4 rounded-full shadow-lg z-40 hover:bg-blue-700"
+        className="fixed bottom-12 right-6 bg-[#c8fe04] text-white p-4 rounded-full shadow-lg z-40"
       >
         <FiMessageSquare className="text-2xl" />
       </motion.button>
