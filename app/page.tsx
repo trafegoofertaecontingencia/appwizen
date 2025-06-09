@@ -18,6 +18,7 @@ export default function Home() {
   if (loading) return <Loading />;
 
 
+  console.log(user, session)
 
   if (!user && !session) return <Wellcome />
 
