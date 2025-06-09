@@ -6,7 +6,7 @@ export default function Loading() {
         <div className="absolute w-full h-full border-4 border-t-[#c8fe04] border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin" />
         
         {/* Texto central */}
-        <span className="text-[#c8fe04] text-xl font-bold">Wizen</span>
+        <span className="text-zinc-700 text-xl font-bold">Wizen</span>
       </div>
     </div>
   );
