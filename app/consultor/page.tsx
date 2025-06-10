@@ -4,6 +4,7 @@ import { useAuth } from "@/app/context/auth-context";
 import { useSession } from "next-auth/react";
 import { SendHorizontal } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import Loading from "../components/Loading";
 
 type Message = {
   role: "user" | "assistant";
@@ -82,7 +83,7 @@ export default function Consultor() {
           ref={chatRef}
           className="flex-1 overflow-y-auto px-6 py-4 space-y-3 bg-gray-50"
         >
-          {historico.map((msg, idx) => (
+          {historico.length > 0 ? historico.map((msg, idx) => (
             <div
               key={idx}
               className={`text-sm rounded-xl px-4 py-3 max-w-[70%] ${
@@ -93,7 +94,8 @@ export default function Consultor() {
             >
               {msg.content}
             </div>
-          ))}
+          )) : 
+          <Loading />}
         </section>
 
         {/* Input + botão */}

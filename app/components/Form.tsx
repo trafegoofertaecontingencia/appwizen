@@ -130,7 +130,6 @@ export default function Form() {
         </button>
         {status && <p className="text-sm text-center mt-2">{status}</p>}
       </form>
-        <Chat />
     </div>
   );
 }
