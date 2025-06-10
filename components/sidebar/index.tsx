@@ -1,9 +1,9 @@
 import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
-import { Button } from "../ui/button";
 
 import Link from "next/link";
 
 import { Settings, ChartColumnBig, NotebookPen, Target  } from "lucide-react";
+import { VscRobot } from "react-icons/vsc";
 
 export default function Sidebar() {
   return (
@@ -18,6 +18,10 @@ export default function Sidebar() {
 
               <Link href="/dashboard">
                   <ChartColumnBig size={24} className="text-gray-800" />
+              </Link>
+
+              <Link href="/chat">
+                  <VscRobot size={24} className="text-gray-800" />
               </Link>
 
               <Link href="/goals">

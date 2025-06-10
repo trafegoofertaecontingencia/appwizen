@@ -29,7 +29,6 @@ export default function Form() {
   const tipoSelecionado = watch("tipo");
   const selecionado = watch("categoria");
 
-  console.log(selecionado);
 
   const [status, setStatus] = useState("");
 
@@ -125,7 +124,7 @@ export default function Form() {
         </div>
         <button
           type="submit"
-          className="w-full bg-[#c8fe04] text-white p-2 rounded-lg hover:bg-blue-600"
+          className="w-full bg-[#c8fe04] text-zinc-700 font-bold p-2 rounded-lg hover:bg-blue-600"
         >
           Salvar
         </button>

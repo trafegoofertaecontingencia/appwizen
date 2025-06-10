@@ -14,9 +14,9 @@ export async function POST(req: Request) {
   const user = await User.findById(userId);
   if (!user) return NextResponse.json({ error: "Usuário não encontrado" }, { status: 404 });
 
+
 const transacoes = await Transaction.find({ userId })
   .sort({ createdAt: -1 })
-  .limit(10);
   const historico = await Message.find({ userId }).sort({ createdAt: 1 });
 
 
