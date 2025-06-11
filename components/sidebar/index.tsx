@@ -20,7 +20,7 @@ export default function Sidebar() {
                   <ChartColumnBig size={24} className="text-gray-800" />
               </Link>
 
-              <Link href="/chat">
+              <Link href="/consultor">
                   <VscRobot size={24} className="text-gray-800" />
               </Link>
 
