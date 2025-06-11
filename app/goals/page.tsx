@@ -125,7 +125,7 @@ export default function GoalsPage() {
         )}
       </div>
 
-      {true ? <Loading margin='4' /> : metas.map((meta, idx) => (  
+      {false ? <Loading margin='4' /> : metas.map((meta, idx) => (  
         <div
           key={meta._id || idx}
           className="bg-card border border-border rounded-xl p-5 shadow-sm"
