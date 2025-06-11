@@ -71,7 +71,7 @@ export default function Consultor() {
   };
 
   return (
-    <main className="flex items-center justify-center px-4">
+    <main className="flex items-center justify-center">
       <div className="w-full max-w-3xl bg-[#c8fe04] rounded-6xl shadow-2xl flex flex-col h-[80vh]">
         {/* Título */}
         <header className="bg-[#c8fe04] px-6 py-4">
@@ -86,7 +86,7 @@ export default function Consultor() {
           {historico.length > 0 ? historico.map((msg, idx) => (
             <div
               key={idx}
-              className={`text-sm rounded-xl px-4 py-3 max-w-[70%] ${
+              className={`text-sm rounded-xl px-4 py-3 max-w-[90%] ${
                 msg.role === "user"
                   ? "ml-auto text-right bg-blue-100"
                   : "bg-gray-200"
@@ -95,7 +95,7 @@ export default function Consultor() {
               {msg.content}
             </div>
           )) : 
-          <Loading />}
+          <Loading margin="4" />}
         </section>
 
         {/* Input + botão */}
