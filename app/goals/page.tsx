@@ -26,7 +26,7 @@ export default function GoalsPage() {
   const [progresso, setProgresso] = useState(0);
   const [editando, setEditando] = useState<string | null>(null);
 
-  const [erroBackend, setErroBackend] = useState(''); // ✅ Novo estado de erro do backend
+  const [erroBackend, setErroBackend] = useState(''); // Novo estado de erro do backend
 
   const [carregando, setCarregando] = useState(true);
 
@@ -125,7 +125,7 @@ export default function GoalsPage() {
         )}
       </div>
 
-      {carregando ? <Loading margin='4' /> : metas.map((meta, idx) => (
+      {true ? <Loading margin='4' /> : metas.map((meta, idx) => (  
         <div
           key={meta._id || idx}
           className="bg-card border border-border rounded-xl p-5 shadow-sm"
