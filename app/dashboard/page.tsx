@@ -63,7 +63,7 @@ export default function Dashboard() {
     buscarDados();
   }, [user, session]);
 
-  if (loading) return <Loading />;
+  if (loading) return <Loading margin="4" />;
   if (!user && !session) return <Wellcome />;
 
   return (

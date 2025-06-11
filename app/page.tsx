@@ -15,10 +15,7 @@ export default function Home() {
 
   
 
-  if (loading) return <Loading />;
-
-
-  console.log(user, session)
+  if (loading) return <Loading margin="4" />;
 
   if (!user && !session) return <Wellcome />
 

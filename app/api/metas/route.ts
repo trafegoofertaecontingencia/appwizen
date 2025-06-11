@@ -21,6 +21,7 @@ export async function POST(req: Request) {
   await connectDB();
   const body = await req.json();
 
+
   if (!body.userId || !body.titulo || !body.valor) {
     return NextResponse.json({ error: "Campos obrigatórios faltando" }, { status: 400 });
   }

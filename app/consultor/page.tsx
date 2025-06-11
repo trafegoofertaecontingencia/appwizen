@@ -72,7 +72,7 @@ export default function Consultor() {
 
   return (
     <main className="flex items-center justify-center px-4">
-      <div className="w-full max-w-3xl bg-[#c8fe04] rounded-3xl shadow-2xl flex flex-col h-[80vh]">
+      <div className="w-full max-w-3xl bg-[#c8fe04] rounded-6xl shadow-2xl flex flex-col h-[80vh]">
         {/* Título */}
         <header className="bg-[#c8fe04] px-6 py-4">
           <h1 className="text-xl font-bold text-gray-900">Consultor</h1>

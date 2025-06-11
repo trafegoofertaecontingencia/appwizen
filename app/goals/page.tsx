@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Pencil, Plus } from 'lucide-react';
+import { Pencil } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useAuth } from '@/app/context/auth-context';
+
+import Loading from '@/app/components/Loading';
 
 interface FinanceGoal {
   _id?: string;
@@ -16,7 +18,6 @@ interface FinanceGoal {
 export default function GoalsPage() {
   const { user } = useAuth();
   const { data: session } = useSession();
-  
   const userId = user?.userId || session?.user?.userId;
 
   const [metas, setMetas] = useState<FinanceGoal[]>([]);
@@ -25,16 +26,23 @@ export default function GoalsPage() {
   const [progresso, setProgresso] = useState(0);
   const [editando, setEditando] = useState<string | null>(null);
 
+  const [erroBackend, setErroBackend] = useState(''); // ✅ Novo estado de erro do backend
+
+  const [carregando, setCarregando] = useState(true);
+
   useEffect(() => {
     if (!userId) return;
 
+    setCarregando(true);
+
     fetch(`/api/metas?userId=${userId}`)
-      .then(res => res.json())
-      .then(setMetas);
+      .then((res) => res.json())
+      .then(setMetas)
+      .finally(() => setCarregando(false));
   }, [userId]);
 
   const salvarMeta = async () => {
-    if (!titulo || !valor) return;
+    setErroBackend(''); // limpar erro anterior
 
     const payload = {
       userId,
@@ -43,15 +51,25 @@ export default function GoalsPage() {
       progresso,
     };
 
-    const res = await fetch('/api/metas', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
+    try {
+      const res = await fetch('/api/metas', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
 
-    const novaMeta = await res.json();
-    setMetas(prev => [...prev, novaMeta]);
-    limparFormulario();
+      const data = await res.json();
+
+      if (!res.ok) {
+        setErroBackend(data.error || 'Erro ao salvar meta.');
+        return;
+      }
+
+      setMetas((prev) => [...prev, data]);
+      limparFormulario();
+    } catch (err) {
+      setErroBackend('Erro de conexão com o servidor.');
+    }
   };
 
   const limparFormulario = () => {
@@ -59,6 +77,7 @@ export default function GoalsPage() {
     setValor(0);
     setProgresso(0);
     setEditando(null);
+    setErroBackend('');
   };
 
   return (
@@ -69,7 +88,10 @@ export default function GoalsPage() {
 
       {/* Formulário de criação */}
       <div className="bg-white p-4 border border-gray-200 rounded-xl shadow">
-        <h2 className="text-lg font-medium mb-2">{editando ? 'Editar Meta' : 'Nova Meta'}</h2>
+        <h2 className="text-lg font-medium mb-2">
+          {editando ? 'Editar Meta' : 'Nova Meta'}
+        </h2>
+
         <input
           type="text"
           placeholder="Nome da meta"
@@ -77,26 +99,33 @@ export default function GoalsPage() {
           onChange={(e) => setTitulo(e.target.value)}
           className="w-full mb-2 px-4 py-2 border rounded"
         />
+
         <input
           type="number"
           placeholder="Valor da meta"
-          value={valor}
+          value={valor === 0 ? '' : valor}
           onChange={(e) => setValor(Number(e.target.value))}
           className="w-full mb-2 px-4 py-2 border rounded"
         />
+
         <input
           type="number"
           placeholder="Progresso (%)"
-          value={progresso}
+          value={progresso === 0 ? '' : progresso}
           onChange={(e) => setProgresso(Number(e.target.value))}
-          className="w-full mb-4 px-4 py-2 border rounded"
+          className="w-full mb-3 px-4 py-2 border rounded"
         />
+
         <Button onClick={salvarMeta} className="bg-[#c8fe04] text-zinc-700">
           {editando ? 'Salvar Edição' : 'Adicionar Meta'}
         </Button>
+
+        {erroBackend && (
+          <p className="text-sm text-red-500 mt-3">{erroBackend}</p> // Exibição do erro
+        )}
       </div>
 
-      {metas.map((meta, idx) => (
+      {carregando ? <Loading margin='4' /> : metas.map((meta, idx) => (
         <div
           key={meta._id || idx}
           className="bg-card border border-border rounded-xl p-5 shadow-sm"
