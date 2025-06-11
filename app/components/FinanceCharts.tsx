@@ -46,7 +46,7 @@ export default function FinanceCharts({
   categorias,
   loading,
 }: Props) {
-  if (loading) return <Loading />;
+  if (loading) return <Loading margin="4" />;
 
   const pieData = {
     labels: ["Receita", "Despesa", "Saldo"],
@@ -94,8 +94,6 @@ export default function FinanceCharts({
       },
     },
   };
-
-  console.log(categorias)
 
   const categoriaNomes = {
     mercado: "Mercado",
